@@ -1,0 +1,8 @@
+
+cd project 
+  scrapy startProject projectName
+  
+  cd ProjectName 
+    scrapy genspider FileName  "Path(Website)"
+    
+    scrapy crawl FileName  [-o name.csv]
