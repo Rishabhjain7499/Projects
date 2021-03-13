@@ -1,0 +1,172 @@
+import tkinter
+from tkinter import *
+import tkinter.messagebox
+import sqlite3
+
+root=Tk()
+
+Name = StringVar()
+Contact_No= StringVar()
+Email_Id = StringVar()
+Address = StringVar()
+v= IntVar()
+
+def database():
+    
+    tkinter.messagebox.showinfo("Title","Information Added")
+    
+    db = sqlite3.connect('rj.db')
+
+    a=Name.get()
+    b=Contact_No.get()
+    c=Email_Id.get()
+    d=Address.get()
+    e=v.get()
+
+    cur = db.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS detail(NAME TEXT,MOBILE_NO number,EMAIL_ID TEXT,ADDRESS TEXT,GENDER TEXT)")
+    cur.execute('INSERT INTO detail(NAME,MOBILE_NO,EMAIL_ID,ADDRESS,GENDER) VALUES(?,?,?,?,?)',(a,b,c,d,e,))
+    db.commit()
+    db.close()
+
+def update():
+    tkinter.messagebox.showinfo("Title","Information Updated")
+
+    connt = sqlite3.connect('rj.db')
+    cursor = connt.cursor()
+
+    a=Name.get()
+    b=Contact_No.get()
+    c=Email_Id.get()
+    d=Address.get()
+    e=v.get()
+    
+    cursor.execute("update detail set NAME=?, MOBILE_NO=?,EMAIL_ID=?,ADDRESS=?,GENDER=? where NAME=?",(a,b,c,d,e,a,))
+
+    connt.commit()
+    connt.close()
+    
+    tkinter.messagebox.showinfo("Title","Information Updated")
+    
+
+    
+def Exit():
+    root.destroy()
+    connt = sqlite3.connect('rj.db')
+    cursor = connt.cursor()
+    cursor.execute('SELECT * FROM detail')
+    for row in cursor.fetchall():
+        print(row)
+
+def delete():
+    
+
+    connt = sqlite3.connect('rj.db')
+    cursor = connt.cursor()
+
+    a=Name.get()
+    b=Contact_No.get()
+    c=Email_Id.get()
+    d=Address.get()
+    e=v.get()
+    
+    cursor.execute("delete from  detail  where NAME=?",(a,))
+
+    connt.commit()
+    connt.close()
+    
+    tkinter.messagebox.showinfo("Title","Information Deleted")
+    
+    
+
+def search():
+    
+    connt = sqlite3.connect('rj.db')
+    cursor = connt.cursor()
+
+    a=Name.get()
+    b=Contact_No.get()
+    c=Email_Id.get()
+    d=Address.get()
+    e=v.get()
+    
+    cursor.execute('SELECT * FROM detail where NAME=?',(a,))
+    rows=cursor.fetchall()
+    cursor.close()
+    connt.close()
+    return rows
+
+    
+
+def show():
+    connt = sqlite3.connect('rj.db')
+    cursor = connt.cursor()
+    cursor.execute('SELECT * FROM detail')
+    for row in cursor.fetchall():
+        print(row)
+
+
+   
+
+
+root.title("Profile")
+root.minsize(500,500)
+root.state('z')
+
+Tops=Frame(root,bg="white",width = 1600,height=50,relief=SUNKEN)
+Tops.pack(side=TOP)
+f1=Frame(root,width =50,height=50,relief=SUNKEN)
+f1.pack(side=LEFT)
+f2=Frame(root,width=50,height=50,relief=SUNKEN)
+f2.pack(side=LEFT)
+
+lblinfo = Label(Tops, font=( 'aria' ,42, 'bold' ),text="STUDENTS PROFILE",fg="steel blue",bd=10,anchor='n')
+lblinfo.grid(row=0,column=0)
+
+
+
+lab1=Label(f1,text="Name :",textvariable=1,width=10,fg="steel blue",bd=10,anchor='w', font=( 'aria' ,16, 'bold' ))
+lab1.grid(row=1,column=3,pady=10)
+e1=Entry(f1,width=30,font=('ariel' ,16,'bold'),bd=6,insertwidth=4,bg="powder blue" ,justify='right',textvar=Name)
+e1.grid(row=1,column=4,pady=10)
+
+lab2=Label(f1,text="Contact_No :",width=10,fg="steel blue",bd=10,anchor='w', font=( 'aria' ,16, 'bold' ))
+lab2.grid(row=2,column=3,pady=10)
+e2=Entry(f1,width=30,font=('ariel' ,16,'bold'),bd=6,insertwidth=4,bg="powder blue" ,justify='right',textvar=Contact_No)
+e2.grid(row=2,column=4,pady=10)
+
+lab3=Label(f1,text="Email_Id :",width=10,fg="steel blue",bd=10,anchor='w', font=( 'aria' ,16, 'bold' ))
+lab3.grid(row=3,column=3,pady=10)
+e3=Entry(f1,width=30,font=('ariel' ,16,'bold'),bd=6,insertwidth=4,bg="powder blue" ,justify='right',textvar=Email_Id)
+e3.grid(row=3,column=4,pady=10)
+
+lab4=Label(f1,text="Address :",width=10,fg="steel blue",bd=10,anchor='w', font=( 'aria' ,16, 'bold' ))
+lab4.grid(row=4,column=3,pady=10)
+e4=Entry(f1,width=30,font=('ariel' ,16,'bold'),bd=6,insertwidth=4,bg="powder blue" ,justify='right',textvar=Address)
+e4.grid(row=4,column=4,pady=10)
+
+lab5=Label(f1,text="Gender :",width=10,fg="steel blue",bd=10,anchor='w', font=( 'aria' ,16, 'bold' ))
+lab5.grid(row=5,column=3,pady=10)
+v=IntVar()
+R1=Radiobutton(root,text="Male",font=('ariel',14),variable=v,value=1).place(x=400,y=460)
+R2=Radiobutton(root,text="Female",font=('ariel',14),variable=v,value=2).place(x=500,y=460)
+R3=Radiobutton(root,text="Others",font=('ariel',14),variable=v,value=3).place(x=620,y=460)
+
+B1=Button(f1,text="Search",width=10,fg="black",font=('ariel' ,16,'bold'),bg="powder blue",command=search)
+B1.grid(row=7,column=1,padx=30)
+
+B2=Button(f1,text="Update",width=15,fg="black",font=('ariel' ,16,'bold'),bg="powder blue",command=update)
+B2.grid(row=7,column=3,pady=30)
+
+B3=Button(f1,text="Add Record",width=15,fg="black",font=('ariel' ,16,'bold'),bg="powder blue",command=database)
+B3.grid(row=7,column=4,pady=30)
+
+B4=Button(f1,text="Delete",width=10,fg="black",font=('ariel' ,16,'bold'),bg="powder blue",command=delete)
+B4.grid(row=7,column=5,padx=30)
+
+B5=Button(f1,text="Exit",width=10,fg="black",font=('ariel' ,16,'bold'),bg="powder blue",command=Exit)
+B5.grid(row=7,column=7,pady=30)
+
+
+root.mainloop()
+
